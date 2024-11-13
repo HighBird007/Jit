@@ -1,0 +1,11 @@
+
+*.s
+*.icf
+*.txt
+*.lib
+*.a
+*.cpp
+*.uvprojx
+*.uvoptx
+*.ioc
+.mxproject
