@@ -9,3 +9,5 @@
 *.uvoptx
 *.ioc
 .mxproject
+*.dbgconf
+/MDK-ARM

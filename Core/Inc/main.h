@@ -57,6 +57,8 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define SteeringServo_Pin GPIO_PIN_6
+#define SteeringServo_GPIO_Port GPIOC
 
 /* USER CODE BEGIN Private defines */
 
