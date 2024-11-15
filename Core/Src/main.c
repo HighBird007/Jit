@@ -26,8 +26,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "SteeringServo.h"
-#include "hmc5883.h"
+#include "initialize.h"
 #include "PID.h"
 /* USER CODE END Includes */
 
@@ -99,8 +98,7 @@ int main(void)
   MX_I2C2_Init();
   MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
-    steeringServoInit();
-	hmcInit();
+  initPeripheral();
 	char maintest[100];
   /* USER CODE END 2 */
 
@@ -111,10 +109,14 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  float t = hmcPIDController_Update(&hmcPid,300.0,hmcGetHeading());
-	  sprintf(maintest,"t = %f %f",t,hmcGetHeading());
-	  quickSend(maintest);
-	  turnHeading(t);
+//	  float t = hmcPIDController_Update(&hmcPid,300.0,hmcGetHeading());
+//	  sprintf(maintest,"t = %f %f",t,hmcGetHeading(&hi2c1));
+//	  quickSend(maintest);
+//	  turnHeading(t);
+	 char test[100];
+	MPU6050_Read_All(&hi2c1,&mpu);
+	sprintf(test,"a: %f %f %f g: %f %f %f temp: %f kal: %f %f \n",mpu.Ax,mpu.Ay,mpu.Az,mpu.Gx,mpu.Gy,mpu.Gz,mpu.Temperature,mpu.KalmanAngleX,mpu.KalmanAngleY);
+	  quickSend(test);
 	  HAL_Delay(1000);
   }
   /* USER CODE END 3 */

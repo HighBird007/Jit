@@ -6,6 +6,7 @@
 #include "stdio.h"
 #include "math.h"
 #include "PID.h"
+
 #define HMC5883L_ADDRESS 0x3C
 
 #define CONFIGURATION_A  0x00
@@ -15,11 +16,11 @@
 
 extern PIDController hmcPid;
 
-void hmcInit(void);
+void hmcInit(I2C_HandleTypeDef *I2Cx);
 
-void hmcCalibration(void);
+void hmcCalibration(I2C_HandleTypeDef *I2Cx);
 
-float hmcGetHeading(void);
+float hmcGetHeading(I2C_HandleTypeDef *I2Cx);
 
 
 #endif

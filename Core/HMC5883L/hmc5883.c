@@ -13,23 +13,23 @@ PIDController hmcPid= { 0.5f, 0.1f, 0.01f,
                           PID_LIM_MIN, PID_LIM_MAX,
 			              PID_LIM_MIN_INT, PID_LIM_MAX_INT,
                           0.1f };
-
-void hmcInit(void){
+//初始化
+void hmcInit(I2C_HandleTypeDef *I2Cx){
     uint8_t data = 0x70;
     
-    hmcStatus = HAL_I2C_Mem_Write(&hi2c2, HMC5883L_ADDRESS, CONFIGURATION_A, 1, &data, 1, 1000); 
+    hmcStatus = HAL_I2C_Mem_Write(I2Cx, HMC5883L_ADDRESS, CONFIGURATION_A, 1, &data, 1, 1000); 
     if(hmcStatus != HAL_OK){
         quickSend("CONFIGURATION_A error");
     }
     
     data = 0x20;
-    hmcStatus = HAL_I2C_Mem_Write(&hi2c2, HMC5883L_ADDRESS, CONFIGURATION_B, 1, &data, 1, 1000); 
+    hmcStatus = HAL_I2C_Mem_Write(I2Cx, HMC5883L_ADDRESS, CONFIGURATION_B, 1, &data, 1, 1000); 
     if(hmcStatus != HAL_OK){
         quickSend("CONFIGURATION_B error");
     }
 
     data = 0x0;    
-    hmcStatus = HAL_I2C_Mem_Write(&hi2c2, HMC5883L_ADDRESS, CONFIGURATION_C, 1, &data, 1, 1000);
+    hmcStatus = HAL_I2C_Mem_Write(I2Cx, HMC5883L_ADDRESS, CONFIGURATION_C, 1, &data, 1, 1000);
     if(hmcStatus != HAL_OK){
         quickSend("CONFIGURATION_C error");
     }
@@ -38,9 +38,10 @@ void hmcInit(void){
         Yoffest = (-70-759) / 2;
 	    PIDController_Init(&hmcPid);
 }
-
-float hmcGetHeading(void) {
-    hmcStatus = HAL_I2C_Mem_Read(&hi2c2, HMC5883L_ADDRESS, 0x03, 1, hmcData, 6, 1000); //连续读取
+//获取当前的头朝方向
+float hmcGetHeading(I2C_HandleTypeDef *I2Cx) {
+	
+    hmcStatus = HAL_I2C_Mem_Read(I2Cx, HMC5883L_ADDRESS, 0x03, 1, hmcData, 6, 1000); //连续读取
     
     if(hmcStatus != HAL_OK) {
         quickSend("read failed\n");
@@ -64,13 +65,13 @@ float hmcGetHeading(void) {
 }
 
 //校准
-void hmcCalibration(void){
+void hmcCalibration(I2C_HandleTypeDef *I2Cx){
 	
     int count = 100;
     int xmax = -32768, xmin = 32767, ymax = -32768, ymin = 32767, zmax = -32768, zmin = 32767;
     char messhhee[100];
     while (count != 0) {
-        HAL_I2C_Mem_Read(&hi2c2, HMC5883L_ADDRESS, 0x03, I2C_MEMADD_SIZE_8BIT, hmcData, 6, 1000);
+        HAL_I2C_Mem_Read(I2Cx, HMC5883L_ADDRESS, 0x03, I2C_MEMADD_SIZE_8BIT, hmcData, 6, 1000);
         int16_t x = (int16_t)(hmcData[0] << 8 | hmcData[1]);
         int16_t y = (int16_t)(hmcData[4] << 8 | hmcData[5]);
         if (x > xmax) xmax = x;	
