@@ -1,36 +1,3 @@
-/*
- * mpu6050.c
- *
- *  Created on: Nov 13, 2019
- *      Author: Bulanov Konstantin
- *
- *  Contact information
- *  -------------------
- *
- * e-mail   :  leech001@gmail.com
- */
-
-/*
- * |---------------------------------------------------------------------------------
- * | Copyright (C) Bulanov Konstantin,2021
- * |
- * | This program is free software: you can redistribute it and/or modify
- * | it under the terms of the GNU General Public License as published by
- * | the Free Software Foundation, either version 3 of the License, or
- * | any later version.
- * |
- * | This program is distributed in the hope that it will be useful,
- * | but WITHOUT ANY WARRANTY; without even the implied warranty of
- * | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * | GNU General Public License for more details.
- * |
- * | You should have received a copy of the GNU General Public License
- * | along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * |
- * | Kalman filter algorithm used from https://github.com/TKJElectronics/KalmanFilter
- * |---------------------------------------------------------------------------------
- */
-
 #include <math.h>
 #include "mpu6050.h"
 
@@ -58,14 +25,14 @@ uint32_t timer;
 MPU6050_t mpu;
 
 Kalman_t KalmanX = {
-    .Q_angle = 0.001f,
-    .Q_bias = 0.003f,
-    .R_measure = 0.03f};
+    .Q_angle = 0.01f,
+    .Q_bias = 0.03f,
+    .R_measure = 0.1f};
 
 Kalman_t KalmanY = {
-    .Q_angle = 0.001f,
-    .Q_bias = 0.003f,
-    .R_measure = 0.03f,
+    .Q_angle = 0.01f,
+    .Q_bias = 0.03f,
+    .R_measure = 0.1f,
 };
 
 
@@ -74,26 +41,26 @@ uint8_t mpuInit(I2C_HandleTypeDef *I2Cx)
     uint8_t check;
     uint8_t Data;
 
-    // check device ID WHO_AM_I
 
+	
     HAL_I2C_Mem_Read(I2Cx, MPU6050_ADDR, WHO_AM_I_REG, 1, &check, 1, i2c_timeout);
-
-    if (check == 104) // 0x68 will be returned by the sensor if everything goes well
+	//返回id  如果不对则return 1 初始化失败
+    if (check == 104) // 0x68 
     {
-        // power management register 0X6B we should write all 0's to wake the sensor up
+        
         Data = 0;
         HAL_I2C_Mem_Write(I2Cx, MPU6050_ADDR, PWR_MGMT_1_REG, 1, &Data, 1, i2c_timeout);
 
-        // Set DATA RATE of 1KHz by writing SMPLRT_DIV register
+        
         Data = 0x07;
         HAL_I2C_Mem_Write(I2Cx, MPU6050_ADDR, SMPLRT_DIV_REG, 1, &Data, 1, i2c_timeout);
 
-        // Set accelerometer configuration in ACCEL_CONFIG Register
+        // 设置加速度寄存器
         // XA_ST=0,YA_ST=0,ZA_ST=0, FS_SEL=0 -> � 2g
         Data = 0x00;
         HAL_I2C_Mem_Write(I2Cx, MPU6050_ADDR, ACCEL_CONFIG_REG, 1, &Data, 1, i2c_timeout);
 
-        // Set Gyroscopic configuration in GYRO_CONFIG Register
+        // 设置角速度寄存器
         // XG_ST=0,YG_ST=0,ZG_ST=0, FS_SEL=0 -> � 250 �/s
         Data = 0x00;
         HAL_I2C_Mem_Write(I2Cx, MPU6050_ADDR, GYRO_CONFIG_REG, 1, &Data, 1, i2c_timeout);
@@ -158,7 +125,7 @@ void MPU6050_Read_Temp(I2C_HandleTypeDef *I2Cx, MPU6050_t *DataStruct)
     temp = (int16_t)(Rec_Data[0] << 8 | Rec_Data[1]);
     DataStruct->Temperature = (float)((int16_t)temp / (float)340.0 + (float)36.53);
 }
-
+//函数读取所有的属性 加速度 角速度 温度 并且通过kalman计算出 翻滚 横滚角
 void MPU6050_Read_All(I2C_HandleTypeDef *I2Cx, MPU6050_t *DataStruct)
 {
     uint8_t Rec_Data[14];

@@ -2,11 +2,14 @@
 void initPeripheral(void){
 	//舵机初始化
 	steeringServoInit();
-	//hmc初始化
-	hmcInit(&hi2c2);
 	//mpu初始化
-	mpuInit(&hi2c1);
-	quickSend("mpu init defeat \n ");
 
-	
+	while(	mpuInit(&hi2c1) == 1){
+		quickSend("error");
+		HAL_Delay(100);
+	}
+	//hmc初始化
+	hmcInit();
+	//hmc校准
+	hmcCalibration();
 }

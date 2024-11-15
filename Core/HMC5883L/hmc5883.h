@@ -6,7 +6,7 @@
 #include "stdio.h"
 #include "math.h"
 #include "PID.h"
-
+#include "mpu6050.h"
 #define HMC5883L_ADDRESS 0x3C
 
 #define CONFIGURATION_A  0x00
@@ -16,11 +16,10 @@
 
 extern PIDController hmcPid;
 
-void hmcInit(I2C_HandleTypeDef *I2Cx);
+void hmcInit(void);
 
-void hmcCalibration(I2C_HandleTypeDef *I2Cx);
+void hmcCalibration(void);
 
-float hmcGetHeading(I2C_HandleTypeDef *I2Cx);
-
+float hmcGetHeading(void);
 
 #endif
