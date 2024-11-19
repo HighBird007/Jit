@@ -45,6 +45,7 @@ void MX_USART3_UART_Init(void);
 
 /* USER CODE BEGIN Prototypes */
 void quickSend(char* mess);
+void quickSendNum(uint16_t id,int32_t num);
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus

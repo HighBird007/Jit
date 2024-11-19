@@ -21,7 +21,8 @@
 #include "usart.h"
 
 /* USER CODE BEGIN 0 */
-
+#include "RingBuff.h"
+#include "GPS.h"
 /* USER CODE END 0 */
 
 UART_HandleTypeDef huart1;
@@ -221,7 +222,20 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
 }
 
 /* USER CODE BEGIN 1 */
+
 void quickSend(char* mess){
 	HAL_UART_Transmit(&huart1,(uint8_t*)mess,strlen(mess),1000);
+}
+void quickSendNum(uint16_t id,int32_t num){
+	char q[100];
+	sprintf(q,"<---------------id %d : num %d------------------>\n",id,num);
+	HAL_UART_Transmit(&huart1,(uint8_t*)q,strlen(q),1000);
+}
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+	if(huart==&huart3){
+	 ringBuffWrite(gpsdata,400);
+	 HAL_UART_Receive_DMA(&huart3,gpsdata,400);
+	}
 }
 /* USER CODE END 1 */

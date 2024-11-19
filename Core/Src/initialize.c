@@ -4,9 +4,9 @@ void initPeripheral(void){
 	steeringServoInit();
 	//mpu初始化
 
-	while(	mpuInit(&hi2c1) == 1){
-		quickSend("error");
-		HAL_Delay(100);
+	while(	mpuInit() == 1){
+		quickSend("mpu init error");
+		HAL_Delay(1000);
 	}
 	//hmc初始化
 	hmcInit();

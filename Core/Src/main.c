@@ -28,6 +28,8 @@
 /* USER CODE BEGIN Includes */
 #include "initialize.h"
 #include "PID.h"
+#include "RingBuff.h"
+#include "GPS.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -48,7 +50,6 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -99,7 +100,8 @@ int main(void)
   MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
   initPeripheral();
-char maintest[100];
+  HAL_UART_Receive_DMA(&huart3,gpsdata,400);
+  ringBuffInit();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -109,15 +111,11 @@ char maintest[100];
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	 // float t = hmcPIDController_Update(&hmcPid,300.0,hmcGetHeading());
+	  float t = hmcPIDController_Update(&hmcPid,200.0,hmcGetHeading());
+	  turnHeading(t);
 	 hmcGetHeading();
-//	  turnHeading(t);
-//	 char test[100];
-//	MPU6050_Read_All(&hi2c1,&mpu);
-//	sprintf(test,"a: %f %f %f g: %f %f %f temp: %f kal: %f %f \n",mpu.Ax,mpu.Ay,mpu.Az,mpu.Gx,mpu.Gy,mpu.Gz,mpu.Temperature,mpu.KalmanAngleX,mpu.KalmanAngleY);
-//	  quickSend(test);
-	  
-	  HAL_Delay(1000);
+	 if(updateCurrentGPSData()==false)quickSend("defeat gps \n");
+	 HAL_Delay(100);
   }
   /* USER CODE END 3 */
 }

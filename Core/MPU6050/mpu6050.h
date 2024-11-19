@@ -47,18 +47,18 @@ typedef struct
     double P[2][2];
 } Kalman_t;
 
-uint8_t mpuInit(I2C_HandleTypeDef *I2Cx);
+uint8_t mpuInit(void);
 
-void MPU6050_Read_Accel(I2C_HandleTypeDef *I2Cx, MPU6050_t *DataStruct);
+void MPU6050_Read_Accel(void);
 
-void MPU6050_Read_Gyro(I2C_HandleTypeDef *I2Cx, MPU6050_t *DataStruct);
+void MPU6050_Read_Gyro(void);
 
-void MPU6050_Read_Temp(I2C_HandleTypeDef *I2Cx, MPU6050_t *DataStruct);
+void MPU6050_Read_Temp(void);
 
-void MPU6050_Read_All(I2C_HandleTypeDef *I2Cx, MPU6050_t *DataStruct);
+void MPU6050_Read_All(void);
 
 double Kalman_getAngle(Kalman_t *Kalman, double newAngle, double newRate, double dt);
 
-extern MPU6050_t mpu;
+extern MPU6050_t mpuStruct;
 
 #endif /* INC_GY521_H_ */

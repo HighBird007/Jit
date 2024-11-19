@@ -16,7 +16,7 @@
 
 extern PIDController hmcPid;
 
-void hmcInit(void);
+HAL_StatusTypeDef hmcInit(void);
 
 void hmcCalibration(void);
 
