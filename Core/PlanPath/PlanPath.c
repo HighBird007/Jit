@@ -39,6 +39,7 @@ void updatePlanMarking(void){
 		nextPlanMarking.Longitude = pm[curPlanMarkingFlag].Longitude;
 	}
 	
+	/* 下面运行的需要删除 放入其他方法中 现在只是测试*/
 	//计算出 现在应该的朝向
      nextHeadingAngle = calculateBearing();
 	
