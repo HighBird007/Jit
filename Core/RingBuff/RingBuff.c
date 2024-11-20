@@ -3,6 +3,7 @@
 
 //环形缓冲区结构体实例
 RingBuffStruct ringBuff;
+
 //dma结构体
 extern DMA_HandleTypeDef hdma_usart3_rx;
 
