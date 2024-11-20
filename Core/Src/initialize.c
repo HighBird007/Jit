@@ -12,4 +12,8 @@ void initPeripheral(void){
 	hmcInit();
 	//hmc校准
 	hmcCalibration();
+	//初始化环形缓冲区
+    ringBuffInit();
+	//启动gpsdma
+	HAL_UART_Receive_DMA(&huart3,gpsdata,400);
 }

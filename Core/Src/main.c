@@ -27,9 +27,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "initialize.h"
-#include "PID.h"
-#include "RingBuff.h"
-#include "GPS.h"
+#include "PlanPath.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -100,8 +98,6 @@ int main(void)
   MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
   initPeripheral();
-  HAL_UART_Receive_DMA(&huart3,gpsdata,400);
-  ringBuffInit();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -111,11 +107,8 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  float t = hmcPIDController_Update(&hmcPid,200.0,hmcGetHeading());
-	  turnHeading(t);
-	 hmcGetHeading();
-	 if(updateCurrentGPSData()==false)quickSend("defeat gps \n");
-	 HAL_Delay(100);
+	  updatePlanMarking();
+	  HAL_Delay(200);
   }
   /* USER CODE END 3 */
 }

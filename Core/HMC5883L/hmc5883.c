@@ -1,18 +1,18 @@
 #include "hmc5883.h"
 
-
-#define M_PI 3.14159265358979323846
-
-#define hmcI2Cx &hi2c2
-
 int16_t Xoffest = 0, Yoffest = 0, Zoffest;  // 使用int16_t类型处理有符号数据
+
 int16_t GaX, GaY,GaZ;  // 修改为有符号类型
+
 //存放hmc的寄存器读取数据
 uint8_t hmcData[6];
 
-HAL_StatusTypeDef hmcStatus;
-//hmc模块的pid结构体部分参数模块化
+//初始化 受PlanPath控制
+float nextHeadingAngle;
 
+HAL_StatusTypeDef hmcStatus;
+
+//hmc模块的pid结构体部分参数模块化
 PIDController hmcPid= { 0.5f, 0.1f, 0.01f,
                          0.1f,
                           PID_LIM_MIN, PID_LIM_MAX,
@@ -52,6 +52,7 @@ HAL_StatusTypeDef hmcInit(){
 	
 	return hmcStatus;
 }
+
 //获取当前的头朝方向
 float hmcGetHeading() {
 	
@@ -78,14 +79,16 @@ float hmcGetHeading() {
 //		
 //	float Magangle = atan2(YH,XH) * 180.0 / M_PI;
 	
-     if (Magangle < 0) {
-     Magangle += 360.0;
-	 }
+	Magangle += localDeclination;
+	
+    if (Magangle >= 360.0) Magangle -= 360.0; // 确保在0-360范围内
+    if (Magangle < 0.0) Magangle += 360.0;
 	 
-	 char test[100];
-	 sprintf(test, "x %d y %d z %d  ma %f  p %f  r %f \n", GaX, GaY,GaZ,Magangle,mpuStruct.KalmanAngleX,mpuStruct.KalmanAngleY);
-     quickSend(test);
-	 return Magangle;
+	char test[100];
+	sprintf(test, "x %d y %d z %d  ma %f  p %f  r %f \n", GaX, GaY,GaZ,Magangle,mpuStruct.KalmanAngleX,mpuStruct.KalmanAngleY);
+    quickSend(test);
+	 
+	return Magangle;
 }
 
 //校准
@@ -97,6 +100,7 @@ void hmcCalibration(){
     char messhhee[100];
 	
     while (count != 0) {
+		
         HAL_I2C_Mem_Read(hmcI2Cx, HMC5883L_ADDRESS, 0x03, I2C_MEMADD_SIZE_8BIT, hmcData, 6, 1000);
         int16_t x = (int16_t)(hmcData[0] << 8 | hmcData[1]);
         int16_t y = (int16_t)(hmcData[4] << 8 | hmcData[5]);
@@ -108,15 +112,16 @@ void hmcCalibration(){
 		if (z > zmax) zmax = z;
 		if (z < zmin) zmin = z;
 		
-    sprintf(messhhee, "init %d,%d,%d  %d\n",x, y,z,count);
-   quickSend(messhhee);
+		sprintf(messhhee, "init %d,%d,%d  %d\n",x, y,z,count);
+		quickSend(messhhee);
+		
         count--;
         HAL_Delay(100);
     }
-
-    Xoffest = (xmax + xmin) / 2;
-    Yoffest = (ymax + ymin) / 2;
-	Zoffest = (zmax + zmin) / 2;
+		
+		Xoffest = (xmax + xmin) / 2;
+		Yoffest = (ymax + ymin) / 2;
+		Zoffest = (zmax + zmin) / 2;
 	
 	  sprintf(messhhee, "init %d,%d  ||%d,%d ||%d,%d  ||offest %d %d %d\n",xmax,xmin,ymax,ymin,zmax,zmin,Xoffest,Yoffest,Zoffest);
       quickSend(messhhee);

@@ -49,7 +49,6 @@ uint16_t ringBuffGetSpace(void){
 	space =  ringBuff.readPoint - ringBuff.writePoint -1;	
 		
 	}
-	//quickSendNum(1,space);
 	return space ;
 }
 //写入数据
@@ -61,7 +60,7 @@ void ringBuffWrite(uint8_t* data,int length){
 	}
 	
 	int tailPart = ringBuff.size - ringBuff.writePoint;
-//	quickSendNum(2,tailPart);
+
 	//如果环形缓冲区尾部容量不够存放
 	if(length > tailPart){
 		//首先将数据存放到环形缓冲区尾部
@@ -83,8 +82,6 @@ void ringBuffWrite(uint8_t* data,int length){
 uint8_t ringBuffReadByte(uint8_t* data){
 	//为空直接退出
 	if(ringBuffIsEmpty() == true )return false;
-	//暂时禁用
-//	HAL_DMA_Abort_IT(&hdma_usart3_rx);
 	
 	//读取一个字节 并且移动 对应的读指针
 	*data =  ringBuff.buff[ringBuff.readPoint];

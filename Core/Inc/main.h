@@ -63,6 +63,8 @@ void Error_Handler(void);
 /* USER CODE BEGIN Private defines */
 #define true 1
 #define false 0
+#define EARTH_RADIUS 6371000 // 地球半径，单位：米
+#define M_PI 3.14159265358979323846
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

@@ -226,9 +226,9 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
 void quickSend(char* mess){
 	HAL_UART_Transmit(&huart1,(uint8_t*)mess,strlen(mess),1000);
 }
-void quickSendNum(uint16_t id,int32_t num){
+void quickSendNum(char *mes,int32_t num){
 	char q[100];
-	sprintf(q,"<---------------id %d : num %d------------------>\n",id,num);
+	sprintf(q,"<---------------%s : num %d------------------>\n",mes,num);
 	HAL_UART_Transmit(&huart1,(uint8_t*)q,strlen(q),1000);
 }
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)

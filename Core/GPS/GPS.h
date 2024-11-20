@@ -2,6 +2,8 @@
 #define GPS_h
 #include "RingBuff.h"
 #include <stdio.h>
+
+//此位gps的数据结构体 
 typedef struct {    
     uint8_t lockType;         // GPS定位锁定类型
     uint8_t lockFlags;        // GPS锁定标志位
@@ -16,8 +18,14 @@ typedef struct {
     uint16_t positionDOP;     // 定位精度因子（PDOP）：pdop<4，精度很好；4<pdop<7，精度可接受；pdop>7，精度较差
 } GPSData;
 
+//此位通用gps数据结构体 存放当前的位置信息
+extern GPSData curGPSData;
+
+//更新当前gps数据结构体curGPSData
 uint8_t updateCurrentGPSData(void);
 
+//dma暂存数组 最后写入环形缓冲区里
 extern uint8_t gpsdata[];
+
 #endif
 
