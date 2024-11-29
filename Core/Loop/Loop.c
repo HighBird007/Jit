@@ -64,12 +64,10 @@ void missionHz1(void){
 	quickSendDouble("longitude-------",curGPSData.longitude);
 	quickSendDouble("nextLatitudde-------",nextPlanMarking.Latitude);
 	quickSendDouble("nextLongitude-------",nextPlanMarking.Longitude);
-	quickSendDouble("roll-------",mpuStruct.KalmanAngleX);
-	quickSendDouble("pitch-------",mpuStruct.KalmanAngleY);
-	quickSendDouble("hmc------",curHeadingAngle);
-	quickSendDouble("curhmc----------",nextHeadingAngle);
+	quickSendDouble("curhmc------",curHeadingAngle);
+	quickSendDouble("nexthmc----------",nextHeadingAngle);
 	quickSendNum("flag-----------",curPlanMarkingFlag);
-	quickSend("<----------------------------------------------->");
+	quickSend("<----------------------------------------------->\n");
 	
 }
 
@@ -88,7 +86,7 @@ void missionHz10(void){
 		case AutoMode:
 
 		//如果环形缓冲区数据不够return 或者gps还在启动中  则中断
-		if( updateCurrentGPSData() == false )return ;
+		//if( updateCurrentGPSData() == false )return ;
 		
 		//根据当前位置考虑是否更新下一个标记点
 		updatePlanMarking();
@@ -97,7 +95,7 @@ void missionHz10(void){
         nextHeadingAngle = calculateBearing();
 		
 		//传入hmcPid控制参数 并且使能舵机
-	    turnHeading(hmcPIDController_Update(&hmcPid,nextHeadingAngle,hmcGetHeading()));
+	    turnHeading(hmcPIDController_Update(&hmcPid,nextHeadingAngle,curHeadingAngle));
 		
 		
 		break;
@@ -113,21 +111,7 @@ void missionHz10(void){
 //hz50 任务 获取当前的姿态 以及当前的朝向  由于设备只能15hz 修改成
 void missionHz50(void){
 
-	switch(shipMode){
-	
-		case AutoMode:
-			
-		MPU6050_Read_All();
-		
-		curHeadingAngle = hmcGetHeading();
-		
-		break;
-		
-		case RemoteMode:
-			
-		break;
-	
-	}
+
 	
 }
 

@@ -241,8 +241,14 @@ void quickSendDouble(char *mes,double num){
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
 	if(huart==&huart3){
-	 ringBuffWrite(gpsdata,100);
-	 HAL_UART_Receive_DMA(&huart3,gpsdata,100);
+	// ringBuffWrite(gpsdata,100);
+		
+	curGPSData.latitude= ((int32_t)gpsdata[37] << 24) | ((int32_t)gpsdata[36] << 16) | ((int32_t)gpsdata[35] << 8) | gpsdata[34];
+    curGPSData.longitude = ((int32_t)gpsdata[33] << 24) | ((int32_t)gpsdata[32] << 16) | ((int32_t)gpsdata[31] << 8) | gpsdata[30];
+		curGPSData.latitude = curGPSData.latitude* 1e-7;
+		curGPSData.longitude = curGPSData.longitude* 1e-7;
+	//	HAL_UART_Transmit(&huart1,gpsdata,100,1000);//这一行注释的话  那么经纬度就会不正常
+	HAL_UART_Receive_DMA(&huart3,gpsdata,100);
 	}
 }
 /* USER CODE END 1 */
