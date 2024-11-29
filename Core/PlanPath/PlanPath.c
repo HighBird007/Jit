@@ -1,6 +1,6 @@
 #include "PlanPath.h"
 
-PathMarking pm[10];
+PathMarking pm[20];
 
 PathMarking nextPlanMarking;
 // 将角度转换为弧度 这个是辅助计算 无需调用
@@ -9,26 +9,36 @@ double degrees_to_radians(double degrees);
 //需要前往下一个标记的经纬度
 uint32_t curPlanMarkingFlag = 0;
 
-//存放标记点数量
+//存放标记点数量!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 uint32_t planMarkingCount = 4 ;
+
 //预设好的经纬度路线规划 预设好之后 需要修改上面的存放数
 void planMarkingInit(void){
 	
-	pm[0].Longitude=118.960981926;
-	pm[0].Latitude=31.807021671;
-	pm[1].Longitude=118.961000041;
-	pm[1].Latitude=31.807395369;
-	pm[2].Longitude=118.961321906;
-	pm[2].Latitude=31.807391346;
-	pm[3].Longitude=118.961328611;
-	pm[3].Latitude=31.807120443;
+pm[0].Longitude = 118.892301;
+pm[0].Latitude = 31.911025;
+	/*
+31.911025, 118.892301
+31.911074, 118.892523
+31.910979, 118.892564
+31.910920, 118.892353
+	*/
+
+pm[1].Longitude = 118.892523;
+pm[1].Latitude = 31.911074;
+
+pm[2].Longitude = 118.892564;
+pm[2].Latitude = 31.910979;
 	
+pm[3].Longitude = 118.892353;
+pm[3].Latitude = 31.910920;
+
+nextPlanMarking.Latitude = pm[0].Latitude;
+nextPlanMarking.Longitude = pm[0].Longitude;
 }
 
-//根据当前的gps数据 更新下一个路线规划
+//根据当前的gps数据 更新下一个路线规划 存放于  nextPlanMarking
 void updatePlanMarking(void){
-	//更新当前的gps位置
-	updateCurrentGPSData();
 	
 	//如果距离目标经纬度距离小于设定 deviationDistance 则修改下一个前进的目标点
 	if(calculateDistance() <= deviationDistance){
@@ -38,16 +48,6 @@ void updatePlanMarking(void){
 		nextPlanMarking.Latitude = pm[curPlanMarkingFlag].Latitude;
 		nextPlanMarking.Longitude = pm[curPlanMarkingFlag].Longitude;
 	}
-	
-	/* 下面运行的需要删除 放入其他方法中 现在只是测试*/
-	//计算出 现在应该的朝向
-     nextHeadingAngle = calculateBearing();
-	
-	float t = hmcPIDController_Update(&hmcPid,nextHeadingAngle,hmcGetHeading());
-	
-	quickSendNum("hmc pid",t);
-	//转向舵机转弯
-	turnHeading(t);
 	
 }
 

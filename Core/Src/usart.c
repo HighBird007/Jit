@@ -231,11 +231,18 @@ void quickSendNum(char *mes,int32_t num){
 	sprintf(q,"<---------------%s : num %d------------------>\n",mes,num);
 	HAL_UART_Transmit(&huart1,(uint8_t*)q,strlen(q),1000);
 }
+
+void quickSendDouble(char *mes,double num){
+	char q[100];
+	sprintf(q,"<---------------%s : num %f------------------>\n",mes,num);
+	HAL_UART_Transmit(&huart1,(uint8_t*)q,strlen(q),1000);
+}
+
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
 	if(huart==&huart3){
-	 ringBuffWrite(gpsdata,400);
-	 HAL_UART_Receive_DMA(&huart3,gpsdata,400);
+	 ringBuffWrite(gpsdata,100);
+	 HAL_UART_Receive_DMA(&huart3,gpsdata,100);
 	}
 }
 /* USER CODE END 1 */

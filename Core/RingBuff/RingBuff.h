@@ -2,7 +2,7 @@
 #define RingBuff_h
 #include "usart.h"
 #include "dma.h"
-#define RingBuffSize 500
+#define RingBuffSize 1000
 //当前环形缓冲区的状态
 typedef enum 
 {

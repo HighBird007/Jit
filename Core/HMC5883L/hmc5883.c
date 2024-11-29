@@ -10,47 +10,49 @@ uint8_t hmcData[6];
 //初始化 受PlanPath控制
 float nextHeadingAngle;
 
+float curHeadingAngle;
+
 HAL_StatusTypeDef hmcStatus;
 
 //hmc模块的pid结构体部分参数模块化
-PIDController hmcPid= { 0.5f, 0.1f, 0.01f,
+PIDController hmcPid= { 1.0f, 0.01f, 0.01f,
                          0.1f,
                           PID_LIM_MIN, PID_LIM_MAX,
 			              PID_LIM_MIN_INT, PID_LIM_MAX_INT,
                           0.1f };
 						  
 //初始化
-HAL_StatusTypeDef hmcInit(){
+uint8_t hmcInit(){
     uint8_t data = 0x70;
     
     hmcStatus = HAL_I2C_Mem_Write(hmcI2Cx, HMC5883L_ADDRESS, CONFIGURATION_A, 1, &data, 1, 1000); 
 	
     if(hmcStatus != HAL_OK){
         quickSend("CONFIGURATION_A error");
-		return hmcStatus;
+		return false;
     }
     
     data = 0x20;
     hmcStatus = HAL_I2C_Mem_Write(hmcI2Cx, HMC5883L_ADDRESS, CONFIGURATION_B, 1, &data, 1, 1000); 
     if(hmcStatus != HAL_OK){
         quickSend("CONFIGURATION_B error");
-		return hmcStatus;
+		return false;
     }
 
     data = 0x0;    
     hmcStatus = HAL_I2C_Mem_Write(hmcI2Cx, HMC5883L_ADDRESS, CONFIGURATION_C, 1, &data, 1, 1000);
     if(hmcStatus != HAL_OK){
         quickSend("CONFIGURATION_C error");
-		return hmcStatus;
+		return false;
     }
-	   //实验室校准好的数值  下面校准函数无需调用
-	  //  Xoffest = (376 -300) / 2;
-      //  Yoffest = (-70-759) / 2;
 	
-	//初始化hmc模块的pid结构体参数
+	   //初始化hmc模块的pid结构体参数
 	    PIDController_Init(&hmcPid);
 	
-	return hmcStatus;
+//	Xoffest = 10 ;
+	//Yoffest = -174;
+	
+	return true;
 }
 
 //获取当前的头朝方向
@@ -70,12 +72,11 @@ float hmcGetHeading() {
 	//平面算法
     float Magangle = atan2(GaY, GaX) * 180.0 / M_PI;
 	
-	MPU6050_Read_All();
 //	
 //	float P = mpu.KalmanAngleX;
 //	float R = mpu.KalmanAngleY;
 //	float XH = GaX*cos(P)+GaY*sin(R)*sin(P)-GaZ*cos(R)*sin(P);
-//    float YH = GaY*cos(R)+GaZ*sin(R);
+//  float YH = GaY*cos(R)+GaZ*sin(R);
 //		
 //	float Magangle = atan2(YH,XH) * 180.0 / M_PI;
 	
@@ -83,11 +84,7 @@ float hmcGetHeading() {
 	
     if (Magangle >= 360.0) Magangle -= 360.0; // 确保在0-360范围内
     if (Magangle < 0.0) Magangle += 360.0;
-	 
-	char test[100];
-	sprintf(test, "x %d y %d z %d  ma %f  p %f  r %f \n", GaX, GaY,GaZ,Magangle,mpuStruct.KalmanAngleX,mpuStruct.KalmanAngleY);
-    quickSend(test);
-	 
+
 	return Magangle;
 }
 
@@ -117,6 +114,7 @@ void hmcCalibration(){
 		
         count--;
         HAL_Delay(100);
+		HAL_IWDG_Refresh(&hiwdg);
     }
 		
 		Xoffest = (xmax + xmin) / 2;

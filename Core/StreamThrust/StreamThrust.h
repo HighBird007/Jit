@@ -1,4 +1,4 @@
 #ifndef StreamThrust_h
 #define StreamThrust_h
-#include 
+#include "tim.h"
 #endif

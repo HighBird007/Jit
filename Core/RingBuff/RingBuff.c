@@ -4,10 +4,6 @@
 //环形缓冲区结构体实例
 RingBuffStruct ringBuff;
 
-//dma结构体
-extern DMA_HandleTypeDef hdma_usart3_rx;
-
-
 //初始化ringbuff
 void ringBuffInit(void){
 	ringBuff.size=RingBuffSize;
@@ -52,11 +48,12 @@ uint16_t ringBuffGetSpace(void){
 	}
 	return space ;
 }
+
 //写入数据
 void ringBuffWrite(uint8_t* data,int length){
 	//剩余空间是否可以容纳目前的数据
 	if(length > ringBuffGetSpace()){
-	quickSend("error : ringBuff cant hava more data\n");
+ 	//quickSend("error : ringBuff cant hava more data\n");
 		return ;
 	}
 	
@@ -75,10 +72,11 @@ void ringBuffWrite(uint8_t* data,int length){
 	memcpy(&ringBuff.buff[ringBuff.writePoint],data,length);
 		
 	}
-	quickSend("flag 1------------------\n");
 	//调整写指针位置
 	ringBuff.writePoint = (ringBuff.writePoint + length) % ringBuff.size;
+	//quickSend("ringbuff : write success !!!!!!!!!!\n");
 }
+
 //读取一个字节 返回的true == 1  false == 0  检验数据是否读取成功
 uint8_t ringBuffReadByte(uint8_t* data){
 	//为空直接退出
@@ -106,3 +104,4 @@ void ringBuffOffset(uint16_t num){
 		
 	}
 }
+

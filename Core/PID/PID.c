@@ -90,7 +90,7 @@ float hmcPIDController_Update(PIDController *pid, float setpoint, float measurem
 	}else if(error>180){
 	error-=360;
 	}
-	if(error<=3&&error>=-3)return 0;
+	//if(error<=1&&error>=-1)return 0;
 	/*
 	* Proportional
 	*/

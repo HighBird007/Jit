@@ -21,11 +21,52 @@
 #include "tim.h"
 
 /* USER CODE BEGIN 0 */
-
+#include "Loop.h"
 /* USER CODE END 0 */
 
+TIM_HandleTypeDef htim4;
 TIM_HandleTypeDef htim8;
 
+/* TIM4 init function */
+void MX_TIM4_Init(void)
+{
+
+  /* USER CODE BEGIN TIM4_Init 0 */
+
+  /* USER CODE END TIM4_Init 0 */
+
+  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+
+  /* USER CODE BEGIN TIM4_Init 1 */
+
+  /* USER CODE END TIM4_Init 1 */
+  htim4.Instance = TIM4;
+  htim4.Init.Prescaler = 7200-1;
+  htim4.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim4.Init.Period = 100-1;
+  htim4.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim4.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim4) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  if (HAL_TIM_ConfigClockSource(&htim4, &sClockSourceConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim4, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM4_Init 2 */
+
+  /* USER CODE END TIM4_Init 2 */
+
+}
 /* TIM8 init function */
 void MX_TIM8_Init(void)
 {
@@ -100,7 +141,22 @@ void MX_TIM8_Init(void)
 void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* tim_baseHandle)
 {
 
-  if(tim_baseHandle->Instance==TIM8)
+  if(tim_baseHandle->Instance==TIM4)
+  {
+  /* USER CODE BEGIN TIM4_MspInit 0 */
+
+  /* USER CODE END TIM4_MspInit 0 */
+    /* TIM4 clock enable */
+    __HAL_RCC_TIM4_CLK_ENABLE();
+
+    /* TIM4 interrupt Init */
+    HAL_NVIC_SetPriority(TIM4_IRQn, 0, 0);
+    HAL_NVIC_EnableIRQ(TIM4_IRQn);
+  /* USER CODE BEGIN TIM4_MspInit 1 */
+
+  /* USER CODE END TIM4_MspInit 1 */
+  }
+  else if(tim_baseHandle->Instance==TIM8)
   {
   /* USER CODE BEGIN TIM8_MspInit 0 */
 
@@ -141,7 +197,21 @@ void HAL_TIM_MspPostInit(TIM_HandleTypeDef* timHandle)
 void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* tim_baseHandle)
 {
 
-  if(tim_baseHandle->Instance==TIM8)
+  if(tim_baseHandle->Instance==TIM4)
+  {
+  /* USER CODE BEGIN TIM4_MspDeInit 0 */
+
+  /* USER CODE END TIM4_MspDeInit 0 */
+    /* Peripheral clock disable */
+    __HAL_RCC_TIM4_CLK_DISABLE();
+
+    /* TIM4 interrupt Deinit */
+    HAL_NVIC_DisableIRQ(TIM4_IRQn);
+  /* USER CODE BEGIN TIM4_MspDeInit 1 */
+
+  /* USER CODE END TIM4_MspDeInit 1 */
+  }
+  else if(tim_baseHandle->Instance==TIM8)
   {
   /* USER CODE BEGIN TIM8_MspDeInit 0 */
 
@@ -155,5 +225,51 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* tim_baseHandle)
 }
 
 /* USER CODE BEGIN 1 */
+//这个变量用于控制loop中任务调�?
+uint8_t systemFlag1Hz = 0;
+uint8_t systemFlag10Hz = 0;
+uint8_t systemFlag5Hz = 0;
+uint8_t systemFlag50Hz = 0;
+uint8_t systemFlag15Hz = 0;
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
+    // htim4 是任务调度器的定时器 Loop 使用
+    if (htim == &htim4) {
+        // 1Hz
+        systemFlag1Hz++;
+        if (systemFlag1Hz >= 100) { // 每1秒触发
+            m.Hz1 = 1;
+            systemFlag1Hz = 0;
+        }
+
+        // 10Hz
+        systemFlag10Hz++;
+        if (systemFlag10Hz >= 10) { // 每0.1秒触发
+            m.Hz10 = 1;
+            systemFlag10Hz = 0;
+        }
+
+        // 5Hz
+        systemFlag5Hz++;
+        if (systemFlag5Hz >= 20) { // 每0.2秒触发
+            m.Hz5 = 1;
+            systemFlag5Hz = 0;
+        }
+
+        // 50Hz
+        systemFlag50Hz++;
+        if (systemFlag50Hz >= 2) { // 每0.02秒触发
+            m.Hz50 = 1;
+            systemFlag50Hz = 0;
+        }
+		//15 hz
+		systemFlag15Hz++;
+		if (systemFlag15Hz >= 7) { // 每0.02秒触发
+            m.Hz15 = 1;
+            systemFlag15Hz = 0;
+        }
+		
+    }
+}
 
 /* USER CODE END 1 */

@@ -7,7 +7,8 @@
 #include "PID.h"
 #include "RingBuff.h"
 #include "GPS.h"
-
+#include "Loop.h"
+#include "iwdg.h"
 void initPeripheral(void);
 
 #endif

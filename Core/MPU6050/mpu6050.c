@@ -9,16 +9,15 @@ uint32_t timer;
 MPU6050_t mpuStruct;
 
 Kalman_t KalmanX = {
-    .Q_angle = 0.01f,
-    .Q_bias = 0.03f,
-    .R_measure = 0.1f};
+    .Q_angle = 0.001f,
+    .Q_bias = 0.003f,
+    .R_measure = 0.03f};
 
 Kalman_t KalmanY = {
-    .Q_angle = 0.01f,
-    .Q_bias = 0.03f,
-    .R_measure = 0.1f,
+    .Q_angle = 0.001f,
+    .Q_bias = 0.003f,
+    .R_measure = 0.03f,
 };
-
 
 uint8_t mpuInit()
 {
@@ -28,7 +27,7 @@ uint8_t mpuInit()
 
 	
     HAL_I2C_Mem_Read(mpuI2Cx, MPU6050_ADDR, WHO_AM_I_REG, 1, &check, 1, i2c_timeout);
-	//返回id  如果不对则return 1 初始化失败
+	//返回id  如果不对则return false 初始化失败
     if (check == 104) // 0x68 
     {
         
@@ -48,9 +47,10 @@ uint8_t mpuInit()
         // XG_ST=0,YG_ST=0,ZG_ST=0, FS_SEL=0 -> � 250 �/s
         Data = 0x00;
         HAL_I2C_Mem_Write(mpuI2Cx, MPU6050_ADDR, GYRO_CONFIG_REG, 1, &Data, 1, i2c_timeout);
-        return 0;
+		
+        return true;
     }
-    return 1;
+    return false;
 }
 
 void MPU6050_Read_Accel()
