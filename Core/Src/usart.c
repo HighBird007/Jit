@@ -241,7 +241,7 @@ void quickSendDouble(char *mes,double num){
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
 	if(huart==&huart3){
-	 ringBuffWrite(gpsdata,100);
+	 //ringBuffWrite(gpsdata,100);
 	 HAL_UART_Receive_DMA(&huart3,gpsdata,100);
 	}
 }

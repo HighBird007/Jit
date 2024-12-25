@@ -1,7 +1,7 @@
 #include "SteeringServo.h"
 //1500 转向90 500舵机0   2500舵机180
 
-uint8_t steeringServoInit(void){
+uint8_t initSteeringServo(void){
 	
     HAL_StatusTypeDef mpuStatus = HAL_TIM_PWM_Start(&htim8,TIM_CHANNEL_1);
 	

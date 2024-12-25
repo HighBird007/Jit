@@ -4,7 +4,7 @@ PathMarking pm[20];
 
 PathMarking nextPlanMarking;
 
- ShipPose curPose;
+ShipPose curPose;
 
 // 将角度转换为弧度 这个是辅助计算 无需调用
 double degrees_to_radians(double degrees);
@@ -38,6 +38,7 @@ pm[3].Latitude = 31.807527;
 
 nextPlanMarking.Latitude = pm[0].Latitude;
 nextPlanMarking.Longitude = pm[0].Longitude;
+
 }
 
 //根据当前的gps数据 更新下一个路线规划 存放于  nextPlanMarking

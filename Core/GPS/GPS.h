@@ -21,11 +21,13 @@ typedef struct {
 //此位通用gps数据结构体 存放当前的位置信息
 extern GPSData curGPSData;
 
+uint8_t initGPS(void);
+
 //更新当前gps数据结构体curGPSData
 uint8_t updateCurrentGPSData(void);
 
 //dma暂存数组 最后写入环形缓冲区里
-extern volatile uint8_t gpsdata[];
+extern uint8_t gpsdata[];
 
 #endif
 

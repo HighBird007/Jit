@@ -27,7 +27,7 @@ typedef struct{
 extern Mission m;
 
 //初始化
-void loopInit(void);
+void initLoop(void);
 
 //开启事件循环
 void loopExec(void);

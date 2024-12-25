@@ -4,8 +4,10 @@ Mission m;
 //小船当前模式 自动巡航 AutoMode 和 遥控模式 RemoteMode
 uint8_t shipMode = AutoMode ;
 
+extern uint32_t curPlanMarkingFlag;
+
 //全部赋值为0
-void loopInit(){
+void initLoop(){
 	m.Hz1 = 0;
 	m.Hz5 = 0;
 	m.Hz10 = 0;
@@ -15,7 +17,6 @@ void loopInit(){
 
 
 //loop 分为遥控模式 和 自动巡航模式
-
 void loopExec(void){
 	//hz1任务 发送gps数据
 		if(m.Hz1){
@@ -54,26 +55,12 @@ void loopExec(void){
 	}
 	
 }
-extern uint32_t curPlanMarkingFlag;
+
 //hz1任务 发送gps数据
 void missionHz1(void){
 	
 	//1s喂一次独立看门狗
 	HAL_IWDG_Refresh(&hiwdg);
-	
-	
-	//quickSendDouble("latitude-------",curGPSData.latitude);
-	//quickSendDouble("longitude-------",curGPSData.longitude);
-	//quickSendDouble("nextLatitudde-------",nextPlanMarking.Latitude);
-	//quickSendDouble("nextLongitude-------",nextPlanMarking.Longitude);
-	
-	quickSendDouble("roll-------",mpuStruct.KalmanAngleX);
-	quickSendDouble("pitch-------",mpuStruct.KalmanAngleY);
-	
-	//quickSendDouble("curhmc------",curHeadingAngle);
-	//quickSendDouble("nexthmc----------",nextHeadingAngle);
-	//quickSendNum("flag-----------",curPlanMarkingFlag);
-	//quickSend("<----------------------------------------------->");
 	
 }
 
@@ -91,7 +78,7 @@ void missionHz10(void){
 	
 		case AutoMode:
 			
-           turnHeading(hmcPIDController_Update(&hmcPid,nextHeadingAngle,hmcGetHeading()));
+         //  turnHeading(hmcPIDController_Update(&hmcPid,nextHeadingAngle,hmcGetHeading()));
 		
 		//如果环形缓冲区数据不够return 或者gps还在启动中  则中断
 		if( updateCurrentGPSData() == false )return ;
@@ -100,7 +87,7 @@ void missionHz10(void){
 		updatePlanMarking();
 		
         /*计算出当前位置 和目标位置的的朝向*/
-        nextHeadingAngle = calculateBearing();
+       // nextHeadingAngle = calculateBearing();
 		
 		//传入hmcPid控制参数 并且使能舵机
 	   // turnHeading(hmcPIDController_Update(&hmcPid,nextHeadingAngle,hmcGetHeading()));
@@ -124,11 +111,6 @@ void missionHz50(void){
 	
 		case AutoMode:
 			
-		MPU6050_Read_All();
-		
-		curHeadingAngle = hmcGetHeading();
-
-		
 		break;
 		
 		case RemoteMode:
@@ -140,8 +122,7 @@ void missionHz50(void){
 }
 //为用到
 void missionHz15(void){
-		quickSendDouble("roll-------",mpuStruct.KalmanAngleX);
-	quickSendDouble("pitch-------",mpuStruct.KalmanAngleY);
+
 
 
 }

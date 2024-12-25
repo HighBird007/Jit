@@ -3,7 +3,18 @@
 GPSData curGPSData;
 //gps前几位固定
 const uint8_t GPSHeader[] = {0xB5,0x62,0x01,0x07,0x5c,0x00};
-volatile uint8_t gpsdata[500];
+
+uint8_t gpsdata[500];
+
+uint8_t initGPS(){
+
+	
+	HAL_StatusTypeDef gpsStatus = HAL_UART_Receive_DMA(&huart3,gpsdata,100);
+	
+	return gpsStatus == HAL_OK ? true : false ;
+
+}
+
 // 从环形缓冲区中读取并解析GPS数据 存放于  -> curGPSData <- gps结构体
 uint8_t updateCurrentGPSData(void) {
     // 检查环形缓冲区中是否有足够的数据
@@ -168,4 +179,16 @@ uint8_t updateCurrentGPSData(void) {
     }
 
     return false; // 匹配失败
+}
+
+void updateCurrentPosition() {
+	
+    // 修正：先读取纬度，再读取经度
+    curGPSData.latitude = ((int32_t)gpsdata[37] << 24) | ((int32_t)gpsdata[36] << 16) | ((int32_t)gpsdata[35] << 8) | gpsdata[34];
+    curGPSData.longitude = ((int32_t)gpsdata[33] << 24) | ((int32_t)gpsdata[32] << 16) | ((int32_t)gpsdata[31] << 8) | gpsdata[30];
+
+    // 转换为实际的经纬度
+    curGPSData.longitude = curGPSData.longitude * 1e-7;
+    curGPSData.latitude = curGPSData.latitude * 1e-7;
+	
 }

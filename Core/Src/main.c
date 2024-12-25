@@ -29,7 +29,7 @@
 /* USER CODE BEGIN Includes */
 #include "initialize.h"
 #include "PlanPath.h"
-#include "MadgwickAHRS.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -101,7 +101,6 @@ int main(void)
   MX_TIM4_Init();
   MX_IWDG_Init();
   /* USER CODE BEGIN 2 */
-  quickSend("starting@@@@@@@@@@@@@\n");
   initPeripheral();
   /* USER CODE END 2 */
 
@@ -112,7 +111,6 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	 
 	 loopExec();
   }
   /* USER CODE END 3 */

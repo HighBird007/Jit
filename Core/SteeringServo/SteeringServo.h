@@ -3,8 +3,9 @@
 #include <tim.h>
 
 //启动pwm输出
-uint8_t steeringServoInit(void);
+uint8_t initSteeringServo(void);
 
 //p为pid算法输出的out
 void turnHeading(float p);
+
 #endif
