@@ -4,12 +4,11 @@
 #include "tim.h"
 #include "GPS.h"
 #include "usart.h"
-#include "hmc5883.h"
-#include "mpu6050.h"
 #include "PID.h"
 #include "SteeringServo.h"
 #include "PlanPath.h"
 #include "iwdg.h"
+#include "StreamThrust.h"
 //自动巡航模式
 #define AutoMode  0
 //遥控模式

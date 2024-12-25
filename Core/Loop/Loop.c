@@ -1,5 +1,4 @@
 #include "Loop.h"
-
 //结构体存放每个hz任务的标志位
 Mission m;
 //小船当前模式 自动巡航 AutoMode 和 遥控模式 RemoteMode
@@ -10,29 +9,32 @@ void loopInit(){
 	m.Hz1 = 0;
 	m.Hz5 = 0;
 	m.Hz10 = 0;
+	m.Hz15 = 0;
 	m.Hz50 = 0;
 }
+
+
 //loop 分为遥控模式 和 自动巡航模式
 
 void loopExec(void){
-	
+	//hz1任务 发送gps数据
 		if(m.Hz1){
 	
 		missionHz1();
 		m.Hz1 = 0;
 		
 	}
-	
+	//hz10 任务 使用 舵机转向 此任务负责巡航
 	if(m.Hz10){
 	
 		missionHz10();
 		m.Hz10 = 0;
 		
 	}	
-	
+	//hz50 读取当前的mpu6050 hmc5883采集数据 
 		if(m.Hz50){
 			
-		//missionHz50();
+		missionHz50();
 		m.Hz50 = 0;
 			
 	}
@@ -60,16 +62,18 @@ void missionHz1(void){
 	HAL_IWDG_Refresh(&hiwdg);
 	
 	
-	quickSendDouble("latitude-------",curGPSData.latitude);
-	quickSendDouble("longitude-------",curGPSData.longitude);
-	quickSendDouble("nextLatitudde-------",nextPlanMarking.Latitude);
-	quickSendDouble("nextLongitude-------",nextPlanMarking.Longitude);
+	//quickSendDouble("latitude-------",curGPSData.latitude);
+	//quickSendDouble("longitude-------",curGPSData.longitude);
+	//quickSendDouble("nextLatitudde-------",nextPlanMarking.Latitude);
+	//quickSendDouble("nextLongitude-------",nextPlanMarking.Longitude);
+	
 	quickSendDouble("roll-------",mpuStruct.KalmanAngleX);
 	quickSendDouble("pitch-------",mpuStruct.KalmanAngleY);
-	quickSendDouble("hmc------",curHeadingAngle);
-	quickSendDouble("curhmc----------",nextHeadingAngle);
-	quickSendNum("flag-----------",curPlanMarkingFlag);
-	quickSend("<----------------------------------------------->");
+	
+	//quickSendDouble("curhmc------",curHeadingAngle);
+	//quickSendDouble("nexthmc----------",nextHeadingAngle);
+	//quickSendNum("flag-----------",curPlanMarkingFlag);
+	//quickSend("<----------------------------------------------->");
 	
 }
 
@@ -86,7 +90,9 @@ void missionHz10(void){
 	switch(shipMode){
 	
 		case AutoMode:
-
+			
+           turnHeading(hmcPIDController_Update(&hmcPid,nextHeadingAngle,hmcGetHeading()));
+		
 		//如果环形缓冲区数据不够return 或者gps还在启动中  则中断
 		if( updateCurrentGPSData() == false )return ;
 		
@@ -97,8 +103,9 @@ void missionHz10(void){
         nextHeadingAngle = calculateBearing();
 		
 		//传入hmcPid控制参数 并且使能舵机
-	    turnHeading(hmcPIDController_Update(&hmcPid,nextHeadingAngle,hmcGetHeading()));
+	   // turnHeading(hmcPIDController_Update(&hmcPid,nextHeadingAngle,hmcGetHeading()));
 		
+		streamThrustStart();
 		
 		break;
 		
@@ -110,7 +117,7 @@ void missionHz10(void){
 	
 }
 
-//hz50 任务 获取当前的姿态 以及当前的朝向  由于设备只能15hz 修改成
+//hz50 读取当前的mpu6050 hmc5883采集数据 
 void missionHz50(void){
 
 	switch(shipMode){
@@ -120,6 +127,7 @@ void missionHz50(void){
 		MPU6050_Read_All();
 		
 		curHeadingAngle = hmcGetHeading();
+
 		
 		break;
 		
@@ -129,23 +137,12 @@ void missionHz50(void){
 	
 	}
 	
+}
+//为用到
+void missionHz15(void){
+		quickSendDouble("roll-------",mpuStruct.KalmanAngleX);
+	quickSendDouble("pitch-------",mpuStruct.KalmanAngleY);
+
+
 }
 
-void missionHz15(void){
-	
-		switch(shipMode){
-	
-		case AutoMode:
-			
-		MPU6050_Read_All();
-		
-		curHeadingAngle = hmcGetHeading();
-		
-		break;
-		
-		case RemoteMode:
-			
-		break;
-	
-	}
-}

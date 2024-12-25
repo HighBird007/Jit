@@ -1,7 +1,7 @@
 #ifndef initialize_h
 #define initialize_h
-#include "hmc5883.h"
-#include "mpu6050.h"
+
+
 #include "SteeringServo.h"
 #include "usart.h"
 #include "PID.h"
@@ -9,6 +9,8 @@
 #include "GPS.h"
 #include "Loop.h"
 #include "iwdg.h"
+#include "StreamThrust.h"
+
 void initPeripheral(void);
 
 #endif

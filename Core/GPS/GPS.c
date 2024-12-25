@@ -3,7 +3,7 @@
 GPSData curGPSData;
 //gps前几位固定
 const uint8_t GPSHeader[] = {0xB5,0x62,0x01,0x07,0x5c,0x00};
-uint8_t gpsdata[500];
+volatile uint8_t gpsdata[500];
 // 从环形缓冲区中读取并解析GPS数据 存放于  -> curGPSData <- gps结构体
 uint8_t updateCurrentGPSData(void) {
     // 检查环形缓冲区中是否有足够的数据
@@ -33,10 +33,12 @@ uint8_t updateCurrentGPSData(void) {
         }
     }
 	//quickSendNum("header length 111",compareGPSHeaderFlag);
+	//quickSendNum("write ",ringBuff.writePoint);
+//	quickSendNum("read",ringBuff.readPoint);
     // 检查标志位是否表示匹配成功
     if (compareGPSHeaderFlag == -1) {
 		
-		quickSend("start gps working\n");
+		//quickSend("start gps working\n");
 		
 		//过度前面没用的数据
         ringBuffOffset(20);
@@ -69,7 +71,7 @@ uint8_t updateCurrentGPSData(void) {
         }
         curGPSData.longitude += ((int32_t)temp << (8 * i));
     }
-	quickSendNum("yuanshiLongtitude " , curGPSData.longitude);
+	//quickSendNum("yuanshiLongtitude " , curGPSData.longitude);
 	curGPSData.longitude/=10000000.0f;
 	
     // 解析 latitude
@@ -81,7 +83,7 @@ uint8_t updateCurrentGPSData(void) {
         }
         curGPSData.latitude += ((int32_t)temp << (8 * i));
     }
-	quickSendNum("yuanshiLatitude " , curGPSData.latitude);
+	//quickSendNum("yuanshiLatitude " , curGPSData.latitude);
 	curGPSData.latitude/=10000000.0f;
 	
     // 跳过 8 字节（无用数据）

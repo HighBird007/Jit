@@ -29,6 +29,7 @@
 /* USER CODE BEGIN Includes */
 #include "initialize.h"
 #include "PlanPath.h"
+#include "MadgwickAHRS.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -111,12 +112,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  /*
-	  quickSendDouble("head  ",hmcGetHeading());
-	  turnHeading(hmcPIDController_Update(&hmcPid,200,hmcGetHeading()));
-	  HAL_IWDG_Refresh(&hiwdg);
-	  HAL_Delay(1000);
-	  */
+	 
 	 loopExec();
   }
   /* USER CODE END 3 */

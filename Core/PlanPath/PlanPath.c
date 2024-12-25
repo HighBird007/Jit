@@ -3,6 +3,9 @@
 PathMarking pm[20];
 
 PathMarking nextPlanMarking;
+
+ ShipPose curPose;
+
 // 将角度转换为弧度 这个是辅助计算 无需调用
 double degrees_to_radians(double degrees);
 
@@ -15,8 +18,8 @@ uint32_t planMarkingCount = 4 ;
 //预设好的经纬度路线规划 预设好之后 需要修改上面的存放数
 void planMarkingInit(void){
 	
-pm[0].Longitude = 118.892301;
-pm[0].Latitude = 31.911025;
+pm[0].Longitude =  118.958811;
+pm[0].Latitude = 31.807550;
 	/*
 31.911025, 118.892301
 31.911074, 118.892523
@@ -24,14 +27,14 @@ pm[0].Latitude = 31.911025;
 31.910920, 118.892353
 	*/
 
-pm[1].Longitude = 118.892523;
-pm[1].Latitude = 31.911074;
+pm[1].Longitude = 118.958631;
+pm[1].Latitude = 31.808072;
 
-pm[2].Longitude = 118.892564;
-pm[2].Latitude = 31.910979;
+pm[2].Longitude = 118.958304;
+pm[2].Latitude = 31.808022;
 	
-pm[3].Longitude = 118.892353;
-pm[3].Latitude = 31.910920;
+pm[3].Longitude = 118.958427;
+pm[3].Latitude = 31.807527;
 
 nextPlanMarking.Latitude = pm[0].Latitude;
 nextPlanMarking.Longitude = pm[0].Longitude;

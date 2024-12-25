@@ -120,6 +120,11 @@ void MX_TIM8_Init(void)
   {
     Error_Handler();
   }
+  sConfigOC.Pulse = 2000;
+  if (HAL_TIM_PWM_ConfigChannel(&htim8, &sConfigOC, TIM_CHANNEL_2) != HAL_OK)
+  {
+    Error_Handler();
+  }
   sBreakDeadTimeConfig.OffStateRunMode = TIM_OSSR_DISABLE;
   sBreakDeadTimeConfig.OffStateIDLEMode = TIM_OSSI_DISABLE;
   sBreakDeadTimeConfig.LockLevel = TIM_LOCKLEVEL_OFF;
@@ -181,11 +186,12 @@ void HAL_TIM_MspPostInit(TIM_HandleTypeDef* timHandle)
     __HAL_RCC_GPIOC_CLK_ENABLE();
     /**TIM8 GPIO Configuration
     PC6     ------> TIM8_CH1
+    PC7     ------> TIM8_CH2
     */
-    GPIO_InitStruct.Pin = SteeringServo_Pin;
+    GPIO_InitStruct.Pin = SteeringServo_Pin|GPIO_PIN_7;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-    HAL_GPIO_Init(SteeringServo_GPIO_Port, &GPIO_InitStruct);
+    HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
   /* USER CODE BEGIN TIM8_MspPostInit 1 */
 
@@ -237,34 +243,34 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
     if (htim == &htim4) {
         // 1Hz
         systemFlag1Hz++;
-        if (systemFlag1Hz >= 100) { // 每1秒触发
+        if (systemFlag1Hz >= 100) { // �?1秒触�?
             m.Hz1 = 1;
             systemFlag1Hz = 0;
         }
 
         // 10Hz
         systemFlag10Hz++;
-        if (systemFlag10Hz >= 10) { // 每0.1秒触发
+        if (systemFlag10Hz >= 10) { // �?0.1秒触�?
             m.Hz10 = 1;
             systemFlag10Hz = 0;
         }
 
         // 5Hz
         systemFlag5Hz++;
-        if (systemFlag5Hz >= 20) { // 每0.2秒触发
+        if (systemFlag5Hz >= 20) { // �?0.2秒触�?
             m.Hz5 = 1;
             systemFlag5Hz = 0;
         }
 
         // 50Hz
         systemFlag50Hz++;
-        if (systemFlag50Hz >= 2) { // 每0.02秒触发
+        if (systemFlag50Hz >= 2) { // �?0.02秒触�?
             m.Hz50 = 1;
             systemFlag50Hz = 0;
         }
 		//15 hz
 		systemFlag15Hz++;
-		if (systemFlag15Hz >= 7) { // 每0.02秒触发
+		if (systemFlag15Hz >= 7) { // �?0.02秒触�?
             m.Hz15 = 1;
             systemFlag15Hz = 0;
         }

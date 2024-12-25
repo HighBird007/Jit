@@ -11,3 +11,4 @@
 .mxproject
 *.dbgconf
 /MDK-ARM
+*.cfg

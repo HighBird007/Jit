@@ -2,7 +2,6 @@
 #define PlanPath_h
 #include "GPS.h"
 #include "math.h"
-#include "hmc5883.h"
 #include "SteeringServo.h"
 
 //到达目标经纬度的误差距离 deviation误差
@@ -13,6 +12,12 @@ typedef struct{
 	double Longitude;
 	double Latitude;
 }PathMarking;
+
+typedef struct{
+	double roll;
+	double pitch;
+	double yaw;
+}ShipPose;
 
 //船体行驶的目标点
 extern PathMarking nextPlanMarking;
@@ -30,5 +35,7 @@ double calculateDistance(void);
 //通过当前经纬度 和 目标经纬度    
 /*计算出当前位置 和目标位置的的朝向*/
 double calculateBearing(void);
+
+extern ShipPose curPose;
 
 #endif

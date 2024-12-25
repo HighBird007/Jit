@@ -26,6 +26,8 @@ void initPeripheral(void){
 		
 	}
 	
+	
+	
 	//hmc校准
 	hmcCalibration();
 	

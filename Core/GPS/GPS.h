@@ -25,7 +25,7 @@ extern GPSData curGPSData;
 uint8_t updateCurrentGPSData(void);
 
 //dma暂存数组 最后写入环形缓冲区里
-extern uint8_t gpsdata[];
+extern volatile uint8_t gpsdata[];
 
 #endif
 

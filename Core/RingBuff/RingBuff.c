@@ -53,7 +53,7 @@ uint16_t ringBuffGetSpace(void){
 void ringBuffWrite(uint8_t* data,int length){
 	//剩余空间是否可以容纳目前的数据
 	if(length > ringBuffGetSpace()){
- 	//quickSend("error : ringBuff cant hava more data\n");
+ 	quickSend("error : ringBuff cant hava more data\n");
 		return ;
 	}
 	
