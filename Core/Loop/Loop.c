@@ -78,19 +78,16 @@ void missionHz10(void){
 	
 		case AutoMode:
 			
-         //  turnHeading(hmcPIDController_Update(&hmcPid,nextHeadingAngle,hmcGetHeading()));
 		
 		//如果环形缓冲区数据不够return 或者gps还在启动中  则中断
 		if( updateCurrentGPSData() == false )return ;
+	
 		
 		//根据当前位置考虑是否更新下一个标记点
 		updatePlanMarking();
 		
         /*计算出当前位置 和目标位置的的朝向*/
-       // nextHeadingAngle = calculateBearing();
-		
-		//传入hmcPid控制参数 并且使能舵机
-	   // turnHeading(hmcPIDController_Update(&hmcPid,nextHeadingAngle,hmcGetHeading()));
+		turnHeading(hmcPIDController_Update(&turnPid,calculateBearing(),curPose.yaw));	
 		
 		streamThrustStart();
 		

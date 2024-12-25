@@ -4,8 +4,6 @@ PathMarking pm[20];
 
 PathMarking nextPlanMarking;
 
-ShipPose curPose;
-
 // 将角度转换为弧度 这个是辅助计算 无需调用
 double degrees_to_radians(double degrees);
 

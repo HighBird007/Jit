@@ -3,7 +3,7 @@
 #include "GPS.h"
 #include "math.h"
 #include "SteeringServo.h"
-
+#include "JY901S.h"
 //到达目标经纬度的误差距离 deviation误差
 #define deviationDistance 2
 
@@ -13,11 +13,6 @@ typedef struct{
 	double Latitude;
 }PathMarking;
 
-typedef struct{
-	double roll;
-	double pitch;
-	double yaw;
-}ShipPose;
 
 //船体行驶的目标点
 extern PathMarking nextPlanMarking;
@@ -36,6 +31,6 @@ double calculateDistance(void);
 /*计算出当前位置 和目标位置的的朝向*/
 double calculateBearing(void);
 
-extern ShipPose curPose;
+extern Pose curPose;
 
 #endif

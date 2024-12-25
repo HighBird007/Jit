@@ -1,5 +1,6 @@
 #ifndef Loop_h
 #define Loop_h
+
 #include "stdio.h"
 #include "tim.h"
 #include "GPS.h"
@@ -9,6 +10,7 @@
 #include "PlanPath.h"
 #include "iwdg.h"
 #include "StreamThrust.h"
+#include "JY901S.h"
 //自动巡航模式
 #define AutoMode  0
 //遥控模式

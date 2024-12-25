@@ -100,6 +100,7 @@ int main(void)
   MX_USART3_UART_Init();
   MX_TIM4_Init();
   MX_IWDG_Init();
+  MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
   initPeripheral();
   /* USER CODE END 2 */

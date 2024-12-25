@@ -43,9 +43,7 @@ uint8_t updateCurrentGPSData(void) {
 			
         }
     }
-	//quickSendNum("header length 111",compareGPSHeaderFlag);
-	//quickSendNum("write ",ringBuff.writePoint);
-//	quickSendNum("read",ringBuff.readPoint);
+
     // 检查标志位是否表示匹配成功
     if (compareGPSHeaderFlag == -1) {
 		

@@ -49,6 +49,9 @@ typedef struct {
 void  PIDController_Init(PIDController *pid);
 
 float PIDController_Update(PIDController *pid, float setpoint, float measurement);
-//hmc优化版本
+//转向优化版本
 float hmcPIDController_Update(PIDController *pid, float setpoint, float measurement);
+
+extern PIDController turnPid;
+
 #endif
