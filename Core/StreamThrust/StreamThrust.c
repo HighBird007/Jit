@@ -8,5 +8,13 @@ uint8_t streamThrustInit(void){
 }
 
 void streamThrustStart(void){
+	
      __HAL_TIM_SET_COMPARE(&htim8,TIM_CHANNEL_2,2000);
+	
+}
+
+void streamThrustStop(void){
+	
+     __HAL_TIM_SET_COMPARE(&htim8,TIM_CHANNEL_2,0);
+	
 }

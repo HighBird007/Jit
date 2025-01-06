@@ -29,6 +29,9 @@ void initPeripheral(void){
 	//初始化看门狗 看门狗线路40khz  分频器 32 计数器3800 1s 触发 计数1250 超过三秒则卡死重启 1s喂一次
 	HAL_IWDG_Init(&hiwdg);
 	
+	//初始化遥控器模式
+	HAL_UART_Transmit_DMA(&huart1,remoteCmd,2);
+	
 	//启动任务调度器定时器
 	HAL_TIM_Base_Start_IT(&htim4);
 	

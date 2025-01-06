@@ -18,6 +18,8 @@
 
 extern uint8_t systemFlag;
 
+extern uint8_t remoteCmd[];
+
 typedef struct{
 	uint8_t Hz1;
 	uint8_t Hz5;
@@ -28,26 +30,14 @@ typedef struct{
 
 extern Mission m;
 
+extern uint8_t shipMode;
+
 //初始化
 void initLoop(void);
 
 //开启事件循环
 void loopExec(void);
 
-//hz1 任务
-void missionHz1(void);
-
-//hz5 任务
-void missionHz5(void);
-
-//hz10 任务
-void missionHz10(void);
-
-//hz15 任务
-void missionHz15(void);
-
-//hz50 任务
-void missionHz50(void);
 
 
 #endif

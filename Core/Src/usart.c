@@ -23,6 +23,9 @@
 /* USER CODE BEGIN 0 */
 #include "RingBuff.h"
 #include "GPS.h"
+#include "Loop.h"
+#include "StreamThrust.h"
+#include "SteeringServo.h"
 /* USER CODE END 0 */
 
 UART_HandleTypeDef huart1;
@@ -43,7 +46,7 @@ void MX_USART1_UART_Init(void)
 
   /* USER CODE END USART1_Init 1 */
   huart1.Instance = USART1;
-  huart1.Init.BaudRate = 115200;
+  huart1.Init.BaudRate = 9600;
   huart1.Init.WordLength = UART_WORDLENGTH_8B;
   huart1.Init.StopBits = UART_STOPBITS_1;
   huart1.Init.Parity = UART_PARITY_NONE;
@@ -314,8 +317,34 @@ void quickSendDouble(char *mes,double num){
 }
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
-{
-	if(huart==&huart3){
+{	
+	if(huart==&huart1){
+	if(strcmp((char *)remoteCmd,"cm") == 0){
+		
+		shipMode = shipMode == RemoteMode ? AutoMode : RemoteMode ;
+		
+		streamThrustStop();
+		
+	}
+	else if(strcmp((char *)remoteCmd,"sp") == 0){
+	
+		streamThrustStop();
+		
+	}else if(strcmp((char *)remoteCmd,"st") == 0){
+		
+		streamThrustStart();
+	
+	}else if(strcmp((char *)remoteCmd,"tl") == 0){
+	
+		turnHeading(-10);
+		
+	}else if(strcmp((char *)remoteCmd,"tr") == 0){
+	
+		turnHeading(10);
+	
+	}
+	
+	}else if(huart==&huart3){
 	 ringBuffWrite(gpsdata,100);
 	 HAL_UART_Receive_DMA(&huart3,gpsdata,100);
 	}
