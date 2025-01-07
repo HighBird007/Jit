@@ -16,26 +16,61 @@ uint32_t planMarkingCount = 4 ;
 //预设好的经纬度路线规划 预设好之后 需要修改上面的存放数
 void planMarkingInit(void){
 	
-pm[0].Longitude =  118.958811;
-pm[0].Latitude = 31.807550;
-	/*
-31.911025, 118.892301
-31.911074, 118.892523
-31.910979, 118.892564
-31.910920, 118.892353
-	*/
-
-pm[1].Longitude = 118.958631;
-pm[1].Latitude = 31.808072;
-
-pm[2].Longitude = 118.958304;
-pm[2].Latitude = 31.808022;
 	
-pm[3].Longitude = 118.958427;
-pm[3].Latitude = 31.807527;
+	/*
+31.807128, 118.961030
+
+
+31.807380, 118.961008
+
+31.807392, 118.961295
+
+
+31.807157, 118.961302
+
+	*/
+	//这个是坤泰白桥最近的那个大鱼池 四个点
+	/*
+pm[0].Longitude =  118.961030;
+pm[0].Latitude = 31.807128;
+
+
+pm[1].Longitude = 118.961008;
+pm[1].Latitude = 31.807380;
+
+pm[2].Longitude = 118.961295;
+pm[2].Latitude = 31.807392;
+	
+pm[3].Longitude = 118.961302;
+pm[3].Latitude = 31.807157;
+*/
+//下面是金陵科技学院科技楼下的花坛
+/*
+31.911010, 118.892272
+31.911080, 118.892530
+
+31.910974, 118.892572
+
+31.910906, 118.892324
+*/
+
+pm[0].Longitude =  118.892272;
+pm[0].Latitude = 31.911010;
+
+pm[1].Longitude = 118.892530;
+pm[1].Latitude = 31.911080;
+
+pm[2].Longitude = 118.892572;
+pm[2].Latitude = 31.910974;
+	
+pm[3].Longitude = 118.892324;
+pm[3].Latitude = 31.910906;
+
+planMarkingCount = 4 ;
 
 nextPlanMarking.Latitude = pm[0].Latitude;
 nextPlanMarking.Longitude = pm[0].Longitude;
+
 
 }
 

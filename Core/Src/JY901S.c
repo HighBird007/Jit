@@ -4,7 +4,7 @@ uint8_t poseData[JY901SDATALENGTH];
 
 Pose curPose;
 
-void JY901SInit(void){
+void initJY901S(void){
 	
 	curPose.roll = 0 ;
 	

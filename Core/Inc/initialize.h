@@ -5,7 +5,6 @@
 #include "SteeringServo.h"
 #include "usart.h"
 #include "PID.h"
-#include "RingBuff.h"
 #include "GPS.h"
 #include "Loop.h"
 #include "iwdg.h"

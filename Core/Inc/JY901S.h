@@ -4,6 +4,7 @@
 #include "stdint.h"
 #include "usart.h"
 #include "math.h"
+
 //获取一项数据长度多11 length=11*x  x为需要的一些数据
 
 #define JY901SDATALENGTH 11
@@ -21,7 +22,7 @@ typedef struct{
 
 extern Pose curPose;
 
-void JY901SInit(void);
+void initJY901S(void);
 
 void updatePoseData(void);
 

@@ -2,7 +2,7 @@
 //结构体存放每个hz任务的标志位
 Mission m;
 //小船当前模式 自动巡航 AutoMode 和 遥控模式 RemoteMode
-uint8_t shipMode = AutoMode ;
+uint8_t shipMode = RemoteMode ;
 
 uint8_t remoteCmd[10];
 
@@ -20,11 +20,13 @@ void missionHz50(void);
 
 //全部赋值为0
 void initLoop(){
+	
 	m.Hz1 = 0;
 	m.Hz5 = 0;
 	m.Hz10 = 0;
 	m.Hz15 = 0;
 	m.Hz50 = 0;
+	
 }
 
 
@@ -74,6 +76,7 @@ void missionHz1(void){
 	//1s喂一次独立看门狗
 	HAL_IWDG_Refresh(&hiwdg);
 	
+	
 	char debug[200];
 	
 	sprintf(debug,"lat %f , lot %f \n",curGPSData.latitude,curGPSData.longitude);
@@ -88,16 +91,17 @@ void missionHz1(void){
 	
 	HAL_IWDG_Refresh(&hiwdg);
 	
-	sprintf(debug,"curFlag %d \n",curPlanMarkingFlag);
+	sprintf(debug,"curFlag %d  distance %f \n",curPlanMarkingFlag,calculateDistance());
 	
 	HAL_UART_Transmit(&huart1,(uint8_t*)debug,strlen(debug),1000);
 	
 	HAL_IWDG_Refresh(&hiwdg);
 	
-	sprintf(debug,"heading %f , nextheading %f \n",curPose.yaw,calculateBearing());
+	sprintf(debug,"heading %f , nextheading %f \n",curPose.heading,calculateBearing());
 	
 	HAL_UART_Transmit(&huart1,(uint8_t*)debug,strlen(debug),1000);
 	
+	if(shipMode == AutoMode)quickSend("curmode auto \n");else quickSend("curmode remote \n");
 	HAL_IWDG_Refresh(&hiwdg);
 }
 
@@ -117,13 +121,19 @@ void missionHz10(void){
 			
 		
 		//如果环形缓冲区数据不够return 或者gps还在启动中  则中断
-		if( updateCurrentGPSData() == false )return ;
+		if( curGPSData.latitude ==0 || curGPSData.longitude == 0 ){
+		
+		//quickSend("gps not init \n");
+		
+		return ;
+		
+		}
 	
 		//根据当前位置考虑是否更新下一个标记点
 		updatePlanMarking();
 		
         /*计算出当前位置 和目标位置的的朝向*/
-		turnHeading(hmcPIDController_Update(&turnPid,calculateBearing(),curPose.yaw));	
+		turnHeading(hmcPIDController_Update(&turnPid,calculateBearing(),curPose.heading));	
 		
 		streamThrustStart();
 		
