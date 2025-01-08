@@ -76,7 +76,6 @@ void missionHz1(void){
 	//1s喂一次独立看门狗
 	HAL_IWDG_Refresh(&hiwdg);
 	
-	
 	char debug[200];
 	
 	sprintf(debug,"lat %f , lot %f \n",curGPSData.latitude,curGPSData.longitude);
@@ -102,7 +101,9 @@ void missionHz1(void){
 	HAL_UART_Transmit(&huart1,(uint8_t*)debug,strlen(debug),1000);
 	
 	if(shipMode == AutoMode)quickSend("curmode auto \n");else quickSend("curmode remote \n");
+	
 	HAL_IWDG_Refresh(&hiwdg);
+	
 }
 
 //hz5 任务

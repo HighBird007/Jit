@@ -4,6 +4,7 @@
 #include "math.h"
 #include "SteeringServo.h"
 #include "JY901S.h"
+#include "iwdg.h"
 //到达目标经纬度的误差距离 deviation误差
 #define deviationDistance 2
 

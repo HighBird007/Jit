@@ -16,21 +16,8 @@ uint32_t planMarkingCount = 4 ;
 //预设好的经纬度路线规划 预设好之后 需要修改上面的存放数
 void planMarkingInit(void){
 	
-	
-	/*
-31.807128, 118.961030
-
-
-31.807380, 118.961008
-
-31.807392, 118.961295
-
-
-31.807157, 118.961302
-
-	*/
-	//这个是坤泰白桥最近的那个大鱼池 四个点
-	/*
+//这个是坤泰白桥最近的那个大鱼池 四个点
+/*
 pm[0].Longitude =  118.961030;
 pm[0].Latitude = 31.807128;
 
@@ -44,13 +31,12 @@ pm[2].Latitude = 31.807392;
 pm[3].Longitude = 118.961302;
 pm[3].Latitude = 31.807157;
 */
+	
 //下面是金陵科技学院科技楼下的花坛
 /*
 31.911010, 118.892272
 31.911080, 118.892530
-
 31.910974, 118.892572
-
 31.910906, 118.892324
 */
 
@@ -66,11 +52,47 @@ pm[2].Latitude = 31.910974;
 pm[3].Longitude = 118.892324;
 pm[3].Latitude = 31.910906;
 
+
+
 planMarkingCount = 4 ;
 
-nextPlanMarking.Latitude = pm[0].Latitude;
-nextPlanMarking.Longitude = pm[0].Longitude;
+double lengthMax = INFINITY;
 
+double lengthCur = 0;
+
+for(uint8_t i = 0 ; i < planMarkingCount ; i++){
+	
+	nextPlanMarking.Longitude = pm[i].Longitude;
+	
+	nextPlanMarking.Latitude = pm[i].Latitude;
+	
+	lengthCur = calculateDistance();
+	
+	if( lengthCur < lengthMax ){
+	
+	curPlanMarkingFlag = i ;
+	
+	lengthMax = lengthCur ;
+		
+	
+		
+	}
+	
+	quickSendNum("init plan ",i);
+	
+	quickSendDouble("init length ",lengthCur);
+	
+	HAL_IWDG_Refresh(&hiwdg);
+	
+}
+
+	nextPlanMarking.Longitude = pm[curPlanMarkingFlag].Longitude;
+	
+	nextPlanMarking.Latitude = pm[curPlanMarkingFlag].Latitude;
+	
+	quickSendNum("sure plan ",curPlanMarkingFlag);
+
+	quickSendDouble("sure length ",calculateDistance());
 
 }
 
