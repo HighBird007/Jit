@@ -17,20 +17,30 @@ uint32_t planMarkingCount = 4 ;
 void planMarkingInit(void){
 	
 //这个是坤泰白桥最近的那个大鱼池 四个点
-/*
-pm[0].Longitude =  118.961030;
-pm[0].Latitude = 31.807128;
-
-
-pm[1].Longitude = 118.961008;
-pm[1].Latitude = 31.807380;
-
-pm[2].Longitude = 118.961295;
-pm[2].Latitude = 31.807392;
 	
-pm[3].Longitude = 118.961302;
-pm[3].Latitude = 31.807157;
-*/
+	/*
+	
+	31.807162, 118.961045
+	31.807349, 118.961042
+	31.807357, 118.961247
+
+31.807172, 118.961260
+	
+	*/
+
+pm[0].Longitude =  118.961045;
+pm[0].Latitude = 31.807162;
+
+
+pm[1].Longitude = 118.961042;
+pm[1].Latitude = 31.807349;
+
+pm[2].Longitude = 118.961247;
+pm[2].Latitude = 31.807357;
+	
+pm[3].Longitude = 118.961260;
+pm[3].Latitude = 31.807172;
+
 	
 //下面是金陵科技学院科技楼下的花坛
 /*
@@ -39,7 +49,7 @@ pm[3].Latitude = 31.807157;
 31.910974, 118.892572
 31.910906, 118.892324
 */
-
+/*
 pm[0].Longitude =  118.892272;
 pm[0].Latitude = 31.911010;
 
@@ -52,10 +62,10 @@ pm[2].Latitude = 31.910974;
 pm[3].Longitude = 118.892324;
 pm[3].Latitude = 31.910906;
 
-
+*/
 
 planMarkingCount = 4 ;
-
+/*
 double lengthMax = INFINITY;
 
 double lengthCur = 0;
@@ -85,7 +95,7 @@ for(uint8_t i = 0 ; i < planMarkingCount ; i++){
 	HAL_IWDG_Refresh(&hiwdg);
 	
 }
-
+*/
 	nextPlanMarking.Longitude = pm[curPlanMarkingFlag].Longitude;
 	
 	nextPlanMarking.Latitude = pm[curPlanMarkingFlag].Latitude;
