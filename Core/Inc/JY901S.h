@@ -11,7 +11,7 @@
 
 #define JY901SUSART huart2
 
-extern uint8_t poseData[];
+extern volatile uint8_t poseData[];
 
 typedef struct{
 	double roll;
@@ -20,7 +20,7 @@ typedef struct{
 	double heading;
 }Pose;
 
-extern Pose curPose;
+extern volatile Pose curPose;
 
 void initJY901S(void);
 

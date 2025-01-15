@@ -360,6 +360,7 @@ void quickSendDouble(char *mes,double num){
 	HAL_UART_Transmit(&huart1,(uint8_t*)q,strlen(q),1000);
 }
 
+
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {	
 	
@@ -369,18 +370,13 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 		
 		shipMode = shipMode == RemoteMode ? AutoMode : RemoteMode ;
 		
-		streamThrustStop();
-		
 		turnHeading(0);
 		
 	}
 	else if(strcmp((char *)remoteCmd,"sp") == 0){
 	
-		streamThrustStop();
 		
 	}else if(strcmp((char *)remoteCmd,"st") == 0){
-		
-		streamThrustStart();
 		
 		turnHeading(0);
 	
@@ -393,7 +389,6 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 		turnHeading(10);
 	
 	}
-	HAL_UART_Transmit(&huart1,remoteCmd,2,1000);
 	HAL_UART_Receive_DMA(&huart1,remoteCmd,2);
 	}
 	else if(huart == &huart2){
@@ -411,26 +406,16 @@ void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size)
 {
 	
 	if(huart==&huart3){
-	
-
-		double latt,longt;
 	for(nmindex=0; nmindex<Size; ++nmindex)
 	{
 	if(nmea_decode(&nmea0183, gpsdata[nmindex]))
 	{
-	 latt = nmea0183.gpsData.location.lat;
-	 longt = nmea0183.gpsData.location.lng;
-		
+	curGPSData.latitude = nmea0183.gpsData.location.lat;
+	curGPSData.longitude = nmea0183.gpsData.location.lng;
 	}
 	}
-	char t[100];
-	sprintf(t,"latitude %f  longtitude %f \n",latt,longt);
-	HAL_UART_Transmit(&huart1,(uint8_t*)t,strlen(t),1000);
-	curGPSData.latitude = latt;
-	curGPSData.longitude = longt;
 	nmindex = 0;
     HAL_UARTEx_ReceiveToIdle_DMA(&huart3,gpsdata,1000);
-
 	}
 	
 }

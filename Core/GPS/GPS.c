@@ -1,7 +1,7 @@
 #include "GPS.h"
 //gps结构体
-GPSData curGPSData;
-//gps前几位固定
+volatile GPSData curGPSData;
+//g设备1hz
 
 uint8_t gpsdata[1000];
 

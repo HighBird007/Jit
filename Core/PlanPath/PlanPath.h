@@ -6,7 +6,7 @@
 #include "JY901S.h"
 #include "iwdg.h"
 //到达目标经纬度的误差距离 deviation误差
-#define deviationDistance 2
+#define deviationDistance 3
 
 //路线的标记经纬度
 typedef struct{
@@ -32,6 +32,5 @@ double calculateDistance(void);
 /*计算出当前位置 和目标位置的的朝向*/
 double calculateBearing(void);
 
-extern Pose curPose;
 
 #endif

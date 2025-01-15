@@ -38,7 +38,15 @@ void initLoop(void);
 //开启事件循环
 void loopExec(void);
 
+void missionHz1(void);
 
+void missionHz5(void);
+
+void missionHz10(void);
+
+void missionHz15(void);
+
+void missionHz50(void);
 
 #endif
 

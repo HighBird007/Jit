@@ -4,7 +4,7 @@ PIDController turnPid= { 1.0f, 0.01f, 0.01f,
                          0.1f,
                           PID_LIM_MIN, PID_LIM_MAX,
 			              PID_LIM_MIN_INT, PID_LIM_MAX_INT,
-                          0.1f };
+                          1.0f };
 
 void PIDController_Init(PIDController *pid) {
 

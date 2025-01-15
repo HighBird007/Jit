@@ -14,7 +14,7 @@ typedef struct {
 } GPSData;
 
 //此位通用gps数据结构体 存放当前的位置信息
-extern GPSData curGPSData;
+extern volatile GPSData curGPSData;
 
 uint8_t initGPS(void);
 

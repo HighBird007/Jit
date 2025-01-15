@@ -8,15 +8,7 @@ uint8_t remoteCmd[10];
 
 extern uint32_t curPlanMarkingFlag;
 
-void missionHz1(void);
-
-void missionHz5(void);
-
-void missionHz10(void);
-
-void missionHz15(void);
-
-void missionHz50(void);
+volatile double remoteHeading ;
 
 //全部赋值为0
 void initLoop(){
@@ -71,12 +63,11 @@ void loopExec(void){
 }
 
 //hz1任务 发送gps数据
+char debug[200];
 void missionHz1(void){
 	
 	//1s喂一次独立看门狗
 	HAL_IWDG_Refresh(&hiwdg);
-	
-	char debug[200];
 	
 	sprintf(debug,"lat %f , lot %f \n",curGPSData.latitude,curGPSData.longitude);
 	
@@ -84,23 +75,17 @@ void missionHz1(void){
 	
 	HAL_IWDG_Refresh(&hiwdg);
 	
-	sprintf(debug,"nlat %f , nlot %f \n",nextPlanMarking.Latitude,nextPlanMarking.Longitude);
+	sprintf(debug,"cF %d  di %f \n",curPlanMarkingFlag,calculateDistance());
 	
 	HAL_UART_Transmit(&huart1,(uint8_t*)debug,strlen(debug),1000);
 	
 	HAL_IWDG_Refresh(&hiwdg);
 	
-	sprintf(debug,"curFlag %d  distance %f \n",curPlanMarkingFlag,calculateDistance());
+	sprintf(debug,"h %f , nh%f \n",curPose.heading,calculateBearing());
 	
 	HAL_UART_Transmit(&huart1,(uint8_t*)debug,strlen(debug),1000);
 	
-	HAL_IWDG_Refresh(&hiwdg);
-	
-	sprintf(debug,"heading %f , nextheading %f \n",curPose.heading,calculateBearing());
-	
-	HAL_UART_Transmit(&huart1,(uint8_t*)debug,strlen(debug),1000);
-	
-	if(shipMode == AutoMode)quickSend("curmode auto \n");else quickSend("curmode remote \n");
+	if(shipMode == AutoMode)quickSend("cm auto \n");else quickSend("curmode remote \n");
 	
 	HAL_IWDG_Refresh(&hiwdg);
 	
@@ -109,22 +94,13 @@ void missionHz1(void){
 //hz5 任务
 void missionHz5(void){
 	
-	
-	
-}
-
-//hz10 任务 使用 舵机转向 此任务负责巡航
-void missionHz10(void){
-	
-	switch(shipMode){
+		switch(shipMode){
 	
 		case AutoMode:
 			
-		
-		//如果环形缓冲区数据不够return 或者gps还在启动中  则中断
 		if( curGPSData.latitude ==0 || curGPSData.longitude == 0 ){
 		
-		//quickSend("gps not init \n");
+		quickSend("gps not init \n");
 		
 		return ;
 		
@@ -136,11 +112,30 @@ void missionHz10(void){
         /*计算出当前位置 和目标位置的的朝向*/
 		turnHeading(hmcPIDController_Update(&turnPid,calculateBearing(),curPose.heading));	
 		
-		streamThrustStart();
-		
 		break;
 		
 		case RemoteMode:
+			
+		//turnHeading(hmcPIDController_Update(&turnPid,,curPose.heading));	
+			
+		break;
+	
+	}
+	
+}
+
+//hz10 
+void missionHz10(void){
+	
+	switch(shipMode){
+	
+		case AutoMode:
+			
+		
+		
+		case RemoteMode:
+			
+		
 			
 		break;
 	

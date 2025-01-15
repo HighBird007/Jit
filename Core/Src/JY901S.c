@@ -1,9 +1,9 @@
 #include "JY901S.h"
 
-uint8_t poseData[JY901SDATALENGTH];
+volatile uint8_t poseData[JY901SDATALENGTH];
 
-Pose curPose;
-
+volatile Pose curPose;
+//设备5hz频率数据
 void initJY901S(void){
 	
 	curPose.roll = 0 ;
